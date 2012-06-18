@@ -196,7 +196,7 @@ sub _BarcodeGenerate {
 
     my $Barcode          = sprintf "Ticket/Barcode/%s.png", $Param{TicketID};
 
-    my $Delete = 'DELETE FROM ps_ci_barcode WHERE ticket_id = ?';
+    my $Delete = 'DELETE FROM ps_ticket_barcode WHERE ticket_id = ?';
     $Self->{DBObject}->Do(
         SQL  => $Delete,
         Bind => [ \$Param{TicketID} ],
