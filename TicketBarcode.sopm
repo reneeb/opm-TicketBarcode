@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<otrs_package version="1.0">
+    <CVS>$Id: TicketBarcode.sopm,v 1.1.1.1 2011/12/15 07:49:58 rb Exp $</CVS>
+    <Name>TicketBarcode</Name>
+    <Version>0.0.1</Version>
+    <Framework>3.0.x</Framework>
+    <Vendor>Perl-Services.de</Vendor>
+    <URL>http://www.perl-services.de/</URL>
+    <License>GNU AFFERO GENERAL PUBLIC LICENSE Version 3, November 2007</License>
+    <Description Lang="en">Print barcodes in ticket pdfs.</Description>
+    <Description Lang="de">Gib Barcodes in Ticket-PDFs aus.</Description>
+    <ModuleRequired Version="1.15">GD::Barcode</ModuleRequired>
+    <Filelist>
+        <File Permission="644" Location="Kernel/Config/Files/TicketBarcode.xml"/>
+        <File Permission="644" Location="Kernel/System/Ticket/Barcode.pm"/>
+    </Filelist>
+    <DatabaseInstall>
+        <TableCreate Name="ps_ticket_barcode">
+            <Column Name="ticket_id" Type="BIGINT" Required="True" />
+            <Column Name="b_value" Type="VARCHAR" Size="250"  Required="True" />
+            <Column Name="b_type" Type="VARCHAR" Size="250" Required="True" />
+            <Column Name="b_height" Type="INTEGER" Required="True" />
+            <Column Name="b_width" Type="INTEGER" Required="True" />
+            <Column Name="barcode" Type="VARCHAR" Size="250" Required="True" />
+        </TableCreate>
+    </DatabaseInstall>
+    <DatabaseUninstall>
+        <TableDrop Name="ps_ticket_barcode" />
+    </DatabaseUninstall>
+</otrs_package>
