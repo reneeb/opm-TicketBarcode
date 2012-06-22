@@ -2,7 +2,7 @@
 <otrs_package version="1.0">
     <CVS>$Id: TicketBarcode.sopm,v 1.1.1.1 2011/12/15 07:49:58 rb Exp $</CVS>
     <Name>TicketBarcode</Name>
-    <Version>0.0.1</Version>
+    <Version>0.0.2</Version>
     <Framework>3.0.x</Framework>
     <Vendor>Perl-Services.de</Vendor>
     <URL>http://www.perl-services.de/</URL>
@@ -12,7 +12,8 @@
     <ModuleRequired Version="1.15">GD::Barcode</ModuleRequired>
     <Filelist>
         <File Permission="644" Location="Kernel/Config/Files/TicketBarcode.xml"/>
-        <File Permission="644" Location="Kernel/System/Ticket/Barcode.pm"/>
+        <File Permission="644" Location="Custom/Kernel/Modules/AgentTicketPrint.pm"/>
+        <File Permission="644" Location="Custom/Kernel/System/Ticket/Barcode.pm"/>
     </Filelist>
     <DatabaseInstall>
         <TableCreate Name="ps_ticket_barcode">
