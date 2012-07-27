@@ -10,6 +10,7 @@
                 <Item Key="EAN8">EAN8</Item>
                 <Item Key="EAN13">EAN13</Item>
                 <Item Key="QRcode">QR</Item>
+                <Item Key="Code39">Code39</Item>
             </Option>
         </Setting>
     </ConfigItem>

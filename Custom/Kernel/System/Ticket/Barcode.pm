@@ -169,7 +169,7 @@ sub _BarcodeGenerate {
     my $Type  = $Param{Type};
     my $Value = $Param{Value};
 
-    my $HeightConfigured = $Self->{ConfigObject}->Get( 'Ticket::BarcodeHeight' );
+    my $HeightConfigured = $Self->{ConfigObject}->Get( 'TicketBarcode::BarcodeHeight' ) || 80;
     my $BarcodeObject    = GD::Barcode->new( $Type, $Value );
 
     if ( !$BarcodeObject ) {
