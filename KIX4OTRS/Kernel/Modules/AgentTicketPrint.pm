@@ -1,9 +1,14 @@
 # --
 # Kernel/Modules/AgentTicketPrint.pm - print layout for agent interface
 # Copyright (C) 2001-2010 OTRS AG, http://otrs.org/
+# Extensions Copyright (C) 2006-2012 c.a.p.e. IT GmbH, http://www.cape-it.de
+#
+# written/edited by
+# * Rene(dot)Boehm(at)cape(dash)it(dot)de
+# * Stefan(dot)Mehlig(at)cape(dash)it(dot)de
+#
 # --
-# $Id: AgentTicketPrint.pm,v 1.76 2010/11/29 11:39:07 mb Exp $
-# $OldId: AgentTicketPrint.pm,v 1.76 2010/11/29 11:39:07 mb Exp $
+# $Id: AgentTicketPrint.pm,v 1.2 2012-03-15 10:11:42 smehlig Exp $
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file COPYING for license information (AGPL). If you
@@ -28,7 +33,7 @@ use IO::File;
 # ---
 
 use vars qw($VERSION);
-$VERSION = qw($Revision: 1.76 $) [1];
+$VERSION = qw($Revision: 1.2 $) [1];
 
 sub new {
     my ( $Type, %Param ) = @_;
@@ -54,6 +59,9 @@ sub new {
     $Self->{LinkObject}         = Kernel::System::LinkObject->new(%Param);
     $Self->{PDFObject}          = Kernel::System::PDF->new(%Param);
 
+# KIX4OTRS-capeIT
+    $Self->{TicketFreeTextCount} = $Self->{TicketObject}->GetTicketFreeTextCount(); 
+# EO KIX4OTRS-capeIT
 # --
 # Perl-Services
 # ---
@@ -664,7 +672,10 @@ sub _PDFOutputLinkedObjects {
             for my $Item ( @{ $ObjectList->{$Object} } ) {
 
                 $TableParam{CellData}[$Row][0]{Content} ||= '';
-                $TableParam{CellData}[$Row][1]{Content} = $Item->{Title} || '';
+                # KIX4OTRS-capeIT
+                #$TableParam{CellData}[$Row][1]{Content} = $Item->{Title} || '';                
+                $TableParam{CellData}[$Row][1]{Content} = $Item->{Title} || $Item->{Content} || '';
+                # EO KIX4OTRS-capeIT
             }
             continue {
                 $Row++;
@@ -745,7 +756,9 @@ sub _PDFOutputTicketFreeText {
     my $Row = 0;
 
     # generate table
-    for my $Count ( 1 .. 16 ) {
+# KIX4OTRS-capeIT        
+    for my $Count ( 1 .. $Self->{TicketFreeTextCount} ) {
+# EO KIX4OTRS-capeIT
         if ( $Ticket{"TicketFreeText$Count"} ne "" ) {
             $TableParam{CellData}[$Row][0]{Content} = $Ticket{"TicketFreeKey$Count"} . ':';
             $TableParam{CellData}[$Row][0]{Font}    = 'ProportionalBold';
@@ -1251,7 +1264,9 @@ sub _HTMLMask {
     }
 
     # ticket free text
-    for my $Count ( 1 .. 16 ) {
+# KIX4OTRS-capeIT        
+    for my $Count ( 1 .. $Self->{TicketFreeTextCount} ) {
+# EO KIX4OTRS-capeIT
         if ( $Param{ 'TicketFreeText' . $Count } ) {
             $Self->{LayoutObject}->Block(
                 Name => 'TicketFreeText' . $Count,
