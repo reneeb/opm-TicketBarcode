@@ -14,8 +14,9 @@
         <File Permission="644" Location="Kernel/Config/Files/TicketBarcode.xml"/>
         <File Permission="644" Location="Custom/Kernel/Modules/AgentTicketPrint.pm"/>
         <File Permission="644" Location="Custom/Kernel/System/Ticket/Barcode.pm"/>
+        <File Permission="644" Location="doc/en/TicketBarcode.pod"/>
     </Filelist>
-    <DatabaseInstall>
+    <DatabaseInstall Type="pre">
         <TableCreate Name="ps_ticket_barcode">
             <Column Name="ticket_id" Type="BIGINT" Required="True" />
             <Column Name="b_value" Type="VARCHAR" Size="250"  Required="True" />
@@ -25,7 +26,7 @@
             <Column Name="barcode" Type="VARCHAR" Size="250" Required="True" />
         </TableCreate>
     </DatabaseInstall>
-    <DatabaseUninstall>
+    <DatabaseUninstall Type="post">
         <TableDrop Name="ps_ticket_barcode" />
     </DatabaseUninstall>
 </otrs_package>

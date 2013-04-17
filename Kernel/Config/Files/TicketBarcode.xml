@@ -22,6 +22,17 @@
             <String Regex="">TicketID</String>
         </Setting>
     </ConfigItem>
+    <ConfigItem Name="TicketBarcode::BarcodeTicketURL" Required="0" Valid="0">
+        <Description Translatable="1">Encode ticket URL in the barcode (overrides TicketBarcode::BarcodeAttribute and only usable with QR codes).</Description>
+        <Group>TicketBarcode</Group>
+        <SubGroup>Barcode</SubGroup>
+        <Setting>
+            <Option SelectedID="0">
+                <Item Key="0">No</Item>
+                <Item Key="1">Yes</Item>
+            </Option>
+        </Setting>
+    </ConfigItem>
     <ConfigItem Name="TicketBarcode::RebuildBarcode" Required="1" Valid="1">
         <Description Translatable="1">The barcode should be rebuilt when the barcode type and/or the value of the attribute (or the attribute itself) changed.</Description>
         <Group>TicketBarcode</Group>

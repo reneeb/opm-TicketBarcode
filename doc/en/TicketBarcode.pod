@@ -37,6 +37,7 @@ Defines which ticket attribute is encoded in the barcode. Please note that EAN8 
 =item * TicketBarcode::BarcodeTicketURL
 
 If you use QR codes you can encode the ticket URL in the barcode. If this option is enabled, it overrides the value of C<TicketBarcode::BarcodeAttribute>.
+If you have not chosen QR as the type, this is automatically set.
 
 =item * TicketBarcode::RebuildBarcode
 

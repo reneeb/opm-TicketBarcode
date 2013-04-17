@@ -118,6 +118,15 @@ sub BarcodeGet {
     my $Attribute      = $Self->{ConfigObject}->Get( 'TicketBarcode::BarcodeAttribute' ) || 'TicketNumber';
     my $CurrentValue   = $Ticket{$Attribute};
 
+    if ( $Self->{ConfigObject}->Get( 'TicketBarcode::BarcodeTicketURL' ) ) {
+        $ConfiguredType = 'QRcode';
+        $CurrentValue   = sprintf "%s://%s/%sindex.pl?Action=AgentTicketZoom;TicketID=%s",
+            $Self->{ConfigObject}->Get( 'HttpType' ),
+            $Self->{ConfigObject}->Get( 'FQDN' ),
+            $Self->{ConfigObject}->Get( 'ScriptAlias' ),
+            $Ticket{TicketID};
+    }
+
     my $ShallRebuild   = $Self->{ConfigObject}->Get( 'TicketBarcode::RebuildBarcode' );
 
     if ( $ConfiguredType eq 'EAN13' ) {
@@ -170,7 +179,13 @@ sub _BarcodeGenerate {
     my $Value = $Param{Value};
 
     my $HeightConfigured = $Self->{ConfigObject}->Get( 'TicketBarcode::BarcodeHeight' ) || 80;
-    my $BarcodeObject    = GD::Barcode->new( $Type, $Value );
+    my %Options;
+
+    if ( $Type eq 'QRcode' ) {
+        %Options = ( Ecc => 'H', Version => 11, ModuleSize => 5 );
+    }
+
+    my $BarcodeObject    = GD::Barcode->new( $Type, $Value, \%Options );
 
     if ( !$BarcodeObject ) {
          $Self->{LogObject}->Log(
