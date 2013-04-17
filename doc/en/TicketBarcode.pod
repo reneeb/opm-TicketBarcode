@@ -1,0 +1,51 @@
+=head1 NAME
+
+TicketBarcode
+
+=head1 DESCRIPTION
+
+This package adds a barcode to the PDF version of a ticket (generated via ticket print).
+
+=head1 CONFIGURATION
+
+After installation you can configure the module via SysConfig in the admin area. Config options:
+
+=over 4
+
+=item * TicketBarcode::BarcodeType
+
+This option defines what type of barcode is printed in the PDF version of the ticket. Currently four types are supported.
+
+=over 4
+
+=item * EAN8
+
+=item * EAN13
+
+=item * QR
+
+=item * Code39
+
+=back
+
+Even though the SysConfig defines only four supported barcode types, this packages should support all barcode types that can be generated with the Perl module C<GD::Barcode>. You can add those types by editing I<Kernel/Config/Files/TicketBarcode.xml>.
+
+=item * TicketBarcode::BarcodeAttribute
+
+Defines which ticket attribute is encoded in the barcode. Please note that EAN8 and EAN13 barcodes can handly only numeric attributes that are not longer than the number in the name (EAN8: 8-digit numbers, EAN13, 13-digit numbers).
+
+=item * TicketBarcode::BarcodeTicketURL
+
+If you use QR codes you can encode the ticket URL in the barcode. If this option is enabled, it overrides the value of C<TicketBarcode::BarcodeAttribute>.
+
+=item * TicketBarcode::RebuildBarcode
+
+If enabled, the barcode is rebuilt when the barcode type or the attribute changed.
+
+=back
+
+=head1 AUTHOR AND LICENSE
+
+This package was written by Renee Baecker E<lt>otrs@perl-services.deE<gt>.
+
+The package is licensed unter AGPL. If you did not receive this file, see http://www.gnu.org/licenses/agpl.txt.
