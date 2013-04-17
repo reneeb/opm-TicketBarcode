@@ -44,6 +44,12 @@ If enabled, the barcode is rebuilt when the barcode type or the attribute change
 
 =back
 
+=head1 COMPATIBILITY WITH OTHER ADDONS
+
+Unfortunately, you can't use this add on when you are using ITSMIncidentProblemManagement or any other module that overrides C<Kernel::Modules::AgentTicketPrint>.
+
+If you're interested in improving the compatibility and sponsor some work on it, please drop me a line at E<lt>otrs@perl-services.deE<gt>.
+
 =head1 AUTHOR AND LICENSE
 
 This package was written by Renee Baecker E<lt>otrs@perl-services.deE<gt>.
