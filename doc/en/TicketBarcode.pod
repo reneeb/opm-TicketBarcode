@@ -47,7 +47,7 @@ If enabled, the barcode is rebuilt when the barcode type or the attribute change
 
 =head1 COMPATIBILITY WITH OTHER ADDONS / NEWER OTRS VERSIONS
 
-Unfortunately, you can't use this add on when you are using ITSMIncidentProblemManagement or any other module that overrides C<Kernel::Modules::AgentTicketPrint>. Currently this add on is only available for OTRS 3.0.x.
+Unfortunately, you can't use this add on when you are using ITSMIncidentProblemManagement or any other module that overrides C<Kernel::Modules::AgentTicketPrint>. Currently this add on is only available for OTRS 3.0.x and OTRS 4.0.x.
 
 If you're interested in improving the compatibility and sponsor some work on it, please drop me a line at E<lt>otrs@perl-services.deE<gt>.
 
