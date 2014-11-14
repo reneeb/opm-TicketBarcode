@@ -1,8 +1,6 @@
 # --
 # Kernel/System/Ticket/Barcode.pm - all valid functions
-# Copyright (C) 2012 Perl-Services.de, http://perl-services.de
-# --
-# $Id: Barcode.pm,v 1.22 2011/12/23 21:39:40 reb Exp $
+# Copyright (C) 2012 - 2014 Perl-Services.de, http://perl-services.de
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file COPYING for license information (AGPL). If you
@@ -16,10 +14,15 @@ use warnings;
 
 use GD::Barcode;
 
-use Kernel::System::VirtualFS;
+our $VERSION = 0.02;
 
-use vars qw(@ISA $VERSION);
-$VERSION = qw($Revision: 1.22 $) [1];
+our @ObjectDependencies = qw(
+    Kernel::Config
+    Kernel::System::Encode
+    Kernel::System::Log
+    Kernel::System::Ticket
+    Kernel::System::VirtualFS
+);
 
 =head1 NAME
 
@@ -35,24 +38,6 @@ Kernel::System::Ticket::Barcode - utility functions for barcodes in tickets
 
 create an object
 
-    use Kernel::Config;
-    use Kernel::System::Encode;
-    use Kernel::System::Log;
-    use Kernel::System::Ticket::Barcode;
-
-    my $ConfigObject = Kernel::Config->new();
-    my $EncodeObject = Kernel::System::Encode->new(
-        ConfigObject => $ConfigObject,
-    );
-    my $LogObject = Kernel::System::Log->new(
-        ConfigObject => $ConfigObject,
-        EncodeObject => $EncodeObject,
-    );
-    my $BarcodeObject = Kernel::System::Ticket::Barcode->new(
-        LogObject    => $LogObject,
-        EncodeObject => $EncodeObject,
-    );
-
 =cut
 
 sub new {
@@ -61,14 +46,6 @@ sub new {
     # allocate new hash for object
     my $Self = {};
     bless( $Self, $Type );
-
-    # check needed objects
-    for my $Object (qw(LogObject EncodeObject ConfigObject DBObject MainObject TicketObject)) {
-        $Self->{$Object} = $Param{$Object} || die "Got no $Object!";
-    }
-
-    # create needed objects
-    $Self->{VirtualFSObject} = Kernel::System::VirtualFS->new( %{$Self} );
 
     return $Self;
 }
@@ -82,9 +59,15 @@ Returns information about the Barcode (path, type, attribute, ...)
 sub BarcodeGet {
     my ( $Self, %Param ) = @_;
 
+    my $LogObject    = $Kernel::OM->Get('Kernel::System::Log');
+    my $DBObject     = $Kernel::OM->Get('Kernel::System::DB');
+    my $TicketObject = $Kernel::OM->Get('Kernel::System::Ticket');
+    my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
+    my $FSObject     = $Kernel::OM->Get('Kernel::System::VirtualFS');
+
     for my $Needed ( qw(TicketID) ) {
         if ( !$Param{$Needed} ) {
-            $Self->{LogObject}->Log(
+            $LogObject->Log(
                 Priority => 'error',
                 Message  => "Need $Needed!",
             );
@@ -94,14 +77,14 @@ sub BarcodeGet {
 
     my $SQL = 'SELECT b_value, b_type, barcode, b_width, b_height FROM ps_ticket_barcode '
         . 'WHERE ticket_id = ?';
-    return if !$Self->{DBObject}->Prepare(
+    return if !$DBObject->Prepare(
         SQL   => $SQL,
         Bind  => [ \$Param{TicketID} ],
         Limit => 1,
     );
 
     my $BarcodeInfo; 
-    while ( my @Row = $Self->{DBObject}->FetchrowArray() ) {
+    while ( my @Row = $DBObject->FetchrowArray() ) {
         $BarcodeInfo = {
             Value   => $Row[0],
             Type    => $Row[1],
@@ -111,14 +94,14 @@ sub BarcodeGet {
         }
     }
 
-    my %Ticket = $Self->{TicketObject}->TicketGet( TicketID => $Param{TicketID} );
+    my %Ticket = $TicketObject->TicketGet( TicketID => $Param{TicketID} );
 
-    my $ConfiguredType = $Self->{ConfigObject}->Get( 'TicketBarcode::BarcodeType' ) || 'EAN13';
-    my $BarcodeHeight  = $Self->{ConfigObject}->Get( 'TicketBarcode::BarcodeHeight' ) || '80';
-    my $Attribute      = $Self->{ConfigObject}->Get( 'TicketBarcode::BarcodeAttribute' ) || 'TicketNumber';
+    my $ConfiguredType = $ConfigObject->Get( 'TicketBarcode::BarcodeType' ) || 'EAN13';
+    my $BarcodeHeight  = $ConfigObject->Get( 'TicketBarcode::BarcodeHeight' ) || '80';
+    my $Attribute      = $ConfigObject->Get( 'TicketBarcode::BarcodeAttribute' ) || 'TicketNumber';
     my $CurrentValue   = $Ticket{$Attribute};
 
-    if ( $Self->{ConfigObject}->Get( 'TicketBarcode::BarcodeTicketURL' ) ) {
+    if ( $ConfigObject->Get( 'TicketBarcode::BarcodeTicketURL' ) ) {
         $ConfiguredType = 'QRcode';
         $CurrentValue   = sprintf "%s://%s/%sindex.pl?Action=AgentTicketZoom;TicketID=%s",
             $Self->{ConfigObject}->Get( 'HttpType' ),
@@ -127,7 +110,7 @@ sub BarcodeGet {
             $Ticket{TicketID};
     }
 
-    my $ShallRebuild   = $Self->{ConfigObject}->Get( 'TicketBarcode::RebuildBarcode' );
+    my $ShallRebuild = $ConfigObject->Get( 'TicketBarcode::RebuildBarcode' );
 
     if ( $ConfiguredType eq 'EAN13' ) {
         $CurrentValue = sprintf "%013d", $CurrentValue;
@@ -151,7 +134,7 @@ sub BarcodeGet {
         );
     }
     elsif ( $BarcodeInfo ) {
-        my %File = $Self->{VirtualFSObject}->Read(
+        my %File = $FSObject->Read(
             Filename => $BarcodeInfo->{Barcode},
             Mode     => 'binary',
         );
@@ -165,9 +148,14 @@ sub BarcodeGet {
 sub _BarcodeGenerate {
     my ( $Self, %Param ) = @_;
 
+    my $LogObject    = $Kernel::OM->Get('Kernel::System::Log');
+    my $DBObject     = $Kernel::OM->Get('Kernel::System::DB');
+    my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
+    my $FSObject     = $Kernel::OM->Get('Kernel::System::VirtualFS');
+
     for my $Needed ( qw(Type Value TicketID) ) {
         if ( !$Param{$Needed} ) {
-            $Self->{LogObject}->Log(
+            $LogObject->Log(
                 Priority => 'error',
                 Message  => "Need $Needed!",
             );
@@ -178,7 +166,7 @@ sub _BarcodeGenerate {
     my $Type  = $Param{Type};
     my $Value = $Param{Value};
 
-    my $HeightConfigured = $Self->{ConfigObject}->Get( 'TicketBarcode::BarcodeHeight' ) || 80;
+    my $HeightConfigured = $ConfigObject->Get( 'TicketBarcode::BarcodeHeight' ) || 80;
     my %Options;
 
     if ( $Type eq 'QRcode' ) {
@@ -188,7 +176,7 @@ sub _BarcodeGenerate {
     my $BarcodeObject    = GD::Barcode->new( $Type, $Value, \%Options );
 
     if ( !$BarcodeObject ) {
-         $Self->{LogObject}->Log(
+         $LogObject->Log(
              Priority => 'error',
              Message  => $GD::Barcode::errStr,
          );
@@ -212,7 +200,7 @@ sub _BarcodeGenerate {
     my $Barcode          = sprintf "Ticket/Barcode/%s.png", $Param{TicketID};
 
     my $Delete = 'DELETE FROM ps_ticket_barcode WHERE ticket_id = ?';
-    $Self->{DBObject}->Do(
+    $DBObject->Do(
         SQL  => $Delete,
         Bind => [ \$Param{TicketID} ],
     );
@@ -220,17 +208,17 @@ sub _BarcodeGenerate {
     my $SQL = 'INSERT INTO ps_ticket_barcode (ticket_id, b_value, b_type, b_width, b_height, barcode ) '
         . 'VALUES (?,?,?,?,?,?)';
 
-    $Self->{VirtualFSObject}->Delete(
+    $FSObject->Delete(
         Filename => $Barcode,
     );
 
-    $Self->{VirtualFSObject}->Write(
+    $FSObject->Write(
         Content  => \$BarcodeString,
         Filename => $Barcode,
         Mode     => 'binary',
     );
 
-    return if !$Self->{DBObject}->Do(
+    return if !$DBObject->Do(
         SQL  => $SQL,
         Bind => [
             \$Param{TicketID},
