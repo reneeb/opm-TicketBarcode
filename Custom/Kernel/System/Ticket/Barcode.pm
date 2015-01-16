@@ -104,9 +104,9 @@ sub BarcodeGet {
     if ( $ConfigObject->Get( 'TicketBarcode::BarcodeTicketURL' ) ) {
         $ConfiguredType = 'QRcode';
         $CurrentValue   = sprintf "%s://%s/%sindex.pl?Action=AgentTicketZoom;TicketID=%s",
-            $Self->{ConfigObject}->Get( 'HttpType' ),
-            $Self->{ConfigObject}->Get( 'FQDN' ),
-            $Self->{ConfigObject}->Get( 'ScriptAlias' ),
+            $ConfigObject->Get( 'HttpType' ),
+            $ConfigObject->Get( 'FQDN' ),
+            $ConfigObject->Get( 'ScriptAlias' ),
             $Ticket{TicketID};
     }
 
