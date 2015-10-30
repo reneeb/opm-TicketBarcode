@@ -14,8 +14,6 @@ use warnings;
 
 use GD::Barcode;
 
-our $VERSION = 0.02;
-
 our @ObjectDependencies = qw(
     Kernel::Config
     Kernel::System::Encode
@@ -209,7 +207,8 @@ sub _BarcodeGenerate {
         . 'VALUES (?,?,?,?,?,?)';
 
     $FSObject->Delete(
-        Filename => $Barcode,
+        Filename        => $Barcode,
+        DisableWarnings => 1,
     );
 
     $FSObject->Write(
