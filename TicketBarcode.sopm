@@ -1,19 +1,24 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <otrs_package version="1.0">
     <Name>TicketBarcode</Name>
-    <Version>5.0.1</Version>
+    <Version>5.0.2</Version>
     <Framework>5.0.x</Framework>
     <Vendor>Perl-Services.de</Vendor>
     <URL>http://www.perl-services.de/</URL>
     <License>GNU AFFERO GENERAL PUBLIC LICENSE Version 3, November 2007</License>
     <Description Lang="en">Print barcodes in ticket pdfs.</Description>
     <Description Lang="de">Gib Barcodes in Ticket-PDFs aus.</Description>
+    <Description Lang="hu">Vonalkódok nyomtatása a jegy PDF-ekre.</Description>
+    <ChangeLog Version="5.0.2" Date="2016-04-16 18:55:09">Added Hungarian translation, thanks to Balázs Úr.</ChangeLog>
     <ModuleRequired Version="1.15">GD::Barcode</ModuleRequired>
     <Filelist>
         <File Permission="644" Location="Kernel/Config/Files/TicketBarcode.xml"/>
+        <File Permission="644" Location="Kernel/Language/de_TicketBarcode.pm"/>
+        <File Permission="644" Location="Kernel/Language/hu_TicketBarcode.pm"/>
         <File Permission="644" Location="Custom/Kernel/Modules/AgentTicketPrint.pm"/>
         <File Permission="644" Location="Custom/Kernel/System/Ticket/Barcode.pm"/>
         <File Permission="644" Location="doc/en/TicketBarcode.pod"/>
+        <File Permission="644" Location="doc/hu/TicketBarcode.pod"/>
     </Filelist>
     <DatabaseInstall Type="pre">
         <TableCreate Name="ps_ticket_barcode">
