@@ -2,7 +2,7 @@
 <otrs_config version="1.0" init="Config">
     <CVS>$Id: TicketBarcode.xml,v 1.55 2011/08/24 08:42:06 ud Exp $</CVS>
     <ConfigItem Name="TicketBarcode::BarcodeType" Required="1" Valid="1">
-        <Description Translatable="1">Type of barcode generated for the config items.</Description>
+        <Description Translatable="1">Type of barcode generated for the tickets.</Description>
         <Group>TicketBarcode</Group>
         <SubGroup>Barcode</SubGroup>
         <Setting>
@@ -28,8 +28,8 @@
         <SubGroup>Barcode</SubGroup>
         <Setting>
             <Option SelectedID="0">
-                <Item Key="0">No</Item>
-                <Item Key="1">Yes</Item>
+                <Item Key="0" Translatable="1">No</Item>
+                <Item Key="1" Translatable="1">Yes</Item>
             </Option>
         </Setting>
     </ConfigItem>
@@ -39,8 +39,8 @@
         <SubGroup>Barcode</SubGroup>
         <Setting>
             <Option SelectedID="1">
-                <Item Key="0">no</Item>
-                <Item Key="1">yes</Item>
+                <Item Key="0" Translatable="1">No</Item>
+                <Item Key="1" Translatable="1">Yes</Item>
             </Option>
         </Setting>
     </ConfigItem>

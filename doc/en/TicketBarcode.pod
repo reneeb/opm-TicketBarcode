@@ -32,7 +32,7 @@ Even though the SysConfig defines only four supported barcode types, this packag
 
 =item * TicketBarcode::BarcodeAttribute
 
-Defines which ticket attribute is encoded in the barcode. Please note that EAN8 and EAN13 barcodes can handly only numeric attributes that are not longer than the number in the name (EAN8: 8-digit numbers, EAN13, 13-digit numbers).
+Defines which ticket attribute is encoded in the barcode. Please note that EAN8 and EAN13 barcodes can handle only numeric attributes that are not longer than the number in the name (EAN8: 8-digit numbers, EAN13: 13-digit numbers).
 
 =item * TicketBarcode::BarcodeTicketURL
 
@@ -47,7 +47,7 @@ If enabled, the barcode is rebuilt when the barcode type or the attribute change
 
 =head1 COMPATIBILITY WITH OTHER ADDONS / NEWER OTRS VERSIONS
 
-Unfortunately, you can't use this add on when you are using ITSMIncidentProblemManagement or any other module that overrides C<Kernel::Modules::AgentTicketPrint>. Currently this add on is only available for OTRS 3.0.x and OTRS 4.0.x.
+Unfortunately, you can't use this add on when you are using ITSMIncidentProblemManagement or any other module that overrides C<Kernel::Modules::AgentTicketPrint>.
 
 If you're interested in improving the compatibility and sponsor some work on it, please drop me a line at E<lt>otrs@perl-services.deE<gt>.
 
@@ -55,4 +55,4 @@ If you're interested in improving the compatibility and sponsor some work on it,
 
 This package was written by Renee Baecker E<lt>otrs@perl-services.deE<gt>.
 
-The package is licensed unter AGPL. If you did not receive this file, see http://www.gnu.org/licenses/agpl.txt.
+The package is licensed under AGPL. If you did not receive this file, see http://www.gnu.org/licenses/agpl.txt.
