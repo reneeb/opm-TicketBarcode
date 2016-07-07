@@ -170,6 +170,9 @@ sub _BarcodeGenerate {
     if ( $Type eq 'QRcode' ) {
         %Options = ( Ecc => 'H', Version => 11, ModuleSize => 5 );
     }
+    elsif ( $Type eq 'Code39' ) {
+        $Value = "*$Value*";
+    }
 
     my $BarcodeObject    = GD::Barcode->new( $Type, $Value, \%Options );
 
