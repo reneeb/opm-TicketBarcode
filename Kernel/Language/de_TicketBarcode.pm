@@ -28,6 +28,7 @@ sub Data {
     $Lang->{'The barcode should be rebuilt when the barcode type and/or the value of the attribute (or the attribute itself) changed.'} =
         'Der Barcode soll neu erstellt werden wenn der Barcodetyp und/oder der Wert des Attributs (oder das Attribut selbst) sich ändert.';
     $Lang->{'Height of the barcode image.'} = 'Höhe des Barcodes';
+    $Lang->{'Factor for the barcode image.'} = '';
     $Lang->{'No'} = 'Nein';
     $Lang->{'Yes'} = 'Ja';
 
