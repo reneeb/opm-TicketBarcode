@@ -29,6 +29,7 @@ sub Data {
     $Lang->{'The barcode should be rebuilt when the barcode type and/or the value of the attribute (or the attribute itself) changed.'} =
         'A vonalkódot újra elő kell-e állítani, amikor a vonalkód típusa és/vagy az attribútum értéke (vagy maga az attribútum) megváltozik.';
     $Lang->{'Height of the barcode image.'} = 'A vonalkód képének magassága.';
+    $Lang->{'Factor for the barcode image.'} = 'Nagyítási tényező a vonalkód képéhez.';
     $Lang->{'No'} = 'Nem';
     $Lang->{'Yes'} = 'Igen';
 
