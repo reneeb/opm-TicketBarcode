@@ -304,6 +304,7 @@ sub Run {
            $File->print( $Barcode->{Data} );
         }
 
+        my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
         my $Factor = $ConfigObject->Get('TicketBarcode::Factor') || 2;
         # insert image in PDF
         if ( $Path ) {
