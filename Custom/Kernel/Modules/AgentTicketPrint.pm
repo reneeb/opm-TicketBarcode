@@ -1,6 +1,6 @@
 # --
-# Copyright (C) 2001-2016 OTRS AG, http://otrs.com/
-# Changes Copyright (C) 2011-2016 Perl-Services.de, http://perl-services.de
+# Copyright (C) 2001-2018 OTRS AG, http://otrs.com/
+# Changes Copyright (C) 2011-2018 Perl-Services.de, http://perl-services.de
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file COPYING for license information (AGPL). If you
@@ -212,7 +212,8 @@ sub Run {
     if ( !$Page{MaxPages} || $Page{MaxPages} < 1 || $Page{MaxPages} > 1000 ) {
         $Page{MaxPages} = 100;
     }
-    my $HeaderRight  = $ConfigObject->Get('Ticket::Hook') . $Ticket{TicketNumber};
+    my $HeaderRight
+        = $ConfigObject->Get('Ticket::Hook') . $ConfigObject->Get('Ticket::HookDivider') . $Ticket{TicketNumber};
     my $HeadlineLeft = $HeaderRight;
     my $Title        = $HeaderRight;
     if ( $Ticket{Title} ) {
@@ -280,40 +281,42 @@ sub Run {
         TicketID => $Self->{TicketID},
     ) || {};
 
-        
-    my $Path = $Barcode->{Barcode};
-    my $IsTmpFile;
+    if ( $Barcode && keys %{$Barcode} ) {
+        my $Path = $Barcode->{Barcode};
+        my $IsTmpFile;
 
-    # if path is given, use the image directly,
-    # create a temporary file otherwise
-    if ( !-f $Path ) {
-        my $File   = File::Temp->new( UNLINK => 0, SUFFIX => '.png' );
-        $Path      = $File->filename;
-        $IsTmpFile = 1;
-    }
+        # if path is given, use the image directly,
+        # create a temporary file otherwise
+        if ( !-f $Path ) {
+            my $File   = File::Temp->new( UNLINK => 0, SUFFIX => '.png' );
+            $Path      = $File->filename;
+            $IsTmpFile = 1;
+        }
 
-    if ( $IsTmpFile ) {
-       my $File = IO::File->new( $Path, '>' );
-       $File->binmode;
-       $File->print( $Barcode->{Data} );
-    }
+        if ( $IsTmpFile ) {
+           my $File = IO::File->new( $Path, '>' );
+           $File->binmode;
+           $File->print( $Barcode->{Data} );
+        }
 
-    my $Factor = $ConfigObject->Get('TicketBarcode::Factor') || 2;
-    # insert image in PDF
-    if ( $Path ) {
-      $PDFObject->Image(
-           File   => $Path,
-           Width  => $Barcode->{Width} * $Factor,
-           Height => $Barcode->{Height} * $Factor,
-      );
-    }
+        my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
+        my $Factor = $ConfigObject->Get('TicketBarcode::Factor') || 2;
+        # insert image in PDF
+        if ( $Path ) {
+            $PDFObject->Image(
+               File   => $Path,
+               Width  => $Barcode->{Width} * $Factor,
+               Height => $Barcode->{Height} * $Factor,
+            );
+        }
 
-    if ( $IsTmpFile ) {
-        my $LogObject = $Kernel::OM->Get('Kernel::System::Log');
-        unlink $Path or $LogObject->Log(
-            Priority => 'error',
-            Message  => "Can't delete $Path: $!",
-        );
+        if ( $IsTmpFile ) {
+            my $LogObject = $Kernel::OM->Get('Kernel::System::Log');
+            unlink $Path or $LogObject->Log(
+                Priority => 'error',
+                Message  => "Can't delete $Path: $!",
+            );
+        }
     }
 # ---
 

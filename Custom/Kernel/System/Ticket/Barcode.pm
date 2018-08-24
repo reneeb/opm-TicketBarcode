@@ -92,7 +92,19 @@ sub BarcodeGet {
         }
     }
 
-    my %Ticket = $TicketObject->TicketGet( TicketID => $Param{TicketID} );
+    my %Ticket = $TicketObject->TicketGet(
+        TicketID      => $Param{TicketID},
+        DynamicFields => 1,
+    );
+
+    my @Queues = @{ $ConfigObject->Get('TicketBarcode::Queues') || [] };
+    my $MatchedQueues = @Queues ? 0 : 1;
+
+    for my $Queue ( @Queues ) {
+        $MatchedQueues++ if $Ticket{Queue} =~ m{\A$Queue\z}xms;
+    }
+
+    return if !$MatchedQueues;
 
     my $ConfiguredType = $ConfigObject->Get( 'TicketBarcode::BarcodeType' ) || 'EAN13';
     my $BarcodeHeight  = $ConfigObject->Get( 'TicketBarcode::BarcodeHeight' ) || '80';
@@ -107,6 +119,8 @@ sub BarcodeGet {
             $ConfigObject->Get( 'ScriptAlias' ),
             $Ticket{TicketID};
     }
+
+    return if !$CurrentValue;
 
     my $ShallRebuild = $ConfigObject->Get( 'TicketBarcode::RebuildBarcode' );
 
@@ -167,8 +181,14 @@ sub _BarcodeGenerate {
     my $HeightConfigured = $ConfigObject->Get( 'TicketBarcode::BarcodeHeight' ) || 80;
     my %Options;
 
+    my $Config = $ConfigObject->Get( 'TicketBarcode::' . $Type ) || {};
+
     if ( $Type eq 'QRcode' ) {
-        %Options = ( Ecc => 'H', Version => 11, ModuleSize => 5 );
+        %Options = (
+            Ecc        => $Config->{Ecc}        || 'H',
+            Version    => $Config->{Version}    || 11,
+            ModuleSize => $Config->{ModuleSize} || 5,
+        );
     }
     elsif ( $Type eq 'Code39' ) {
         $Value = "*$Value*";
