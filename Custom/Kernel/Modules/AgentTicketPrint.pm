@@ -286,40 +286,41 @@ sub Run {
             TicketID => $Self->{TicketID},
         ) || {};
 
-        
-        my $Path = $Barcode->{Barcode};
-        my $IsTmpFile;
+        if ( $Barcode && keys %{$Barcode} ) {
+            my $Path = $Barcode->{Barcode};
+            my $IsTmpFile;
 
-        # if path is given, use the image directly,
-        # create a temporary file otherwise
-        if ( !-f $Path ) {
-            my $File   = File::Temp->new( UNLINK => 0, SUFFIX => '.png' );
-            $Path      = $File->filename;
-            $IsTmpFile = 1;
-        }
+            # if path is given, use the image directly,
+            # create a temporary file otherwise
+            if ( !-f $Path ) {
+                my $File   = File::Temp->new( UNLINK => 0, SUFFIX => '.png' );
+                $Path      = $File->filename;
+                $IsTmpFile = 1;
+            }
 
-        if ( $IsTmpFile ) {
-           my $File = IO::File->new( $Path, '>' );
-           $File->binmode;
-           $File->print( $Barcode->{Data} );
-        }
+            if ( $IsTmpFile ) {
+               my $File = IO::File->new( $Path, '>' );
+               $File->binmode;
+               $File->print( $Barcode->{Data} );
+            }
 
-        my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
-        my $Factor = $ConfigObject->Get('TicketBarcode::Factor') || 2;
-        # insert image in PDF
-        if ( $Path ) {
-            $Self->{PDFObject}->Image(
-               File   => $Path,
-               Width  => $Barcode->{Width} * $Factor,
-               Height => $Barcode->{Height} * $Factor,
-            );
-        }
+            my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
+            my $Factor = $ConfigObject->Get('TicketBarcode::Factor') || 2;
+            # insert image in PDF
+            if ( $Path ) {
+                $Self->{PDFObject}->Image(
+                   File   => $Path,
+                   Width  => $Barcode->{Width} * $Factor,
+                   Height => $Barcode->{Height} * $Factor,
+                );
+            }
 
-        if ( $IsTmpFile ) {
-            unlink $Path or $Self->{LogObject}->Log(
-                Priority => 'error',
-                Message  => "Can't delete $Path: $!",
-            );
+            if ( $IsTmpFile ) {
+                unlink $Path or $Self->{LogObject}->Log(
+                    Priority => 'error',
+                    Message  => "Can't delete $Path: $!",
+                );
+            }
         }
 # ---
 
