@@ -1,36 +1,37 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <otrs_package version="1.0">
+    <!-- GENERATED WITH OTRS::OPM::Maker::Command::sopm (1.4) -->
     <Name>TicketBarcode</Name>
-    <Version>5.0.5</Version>
-    <Framework>5.0.x</Framework>
-    <Vendor>Perl-Services.de</Vendor>
-    <URL>http://www.perl-services.de/</URL>
-    <License>GNU AFFERO GENERAL PUBLIC LICENSE Version 3, November 2007</License>
-    <Description Lang="en">Print barcodes in ticket pdfs.</Description>
-    <Description Lang="de">Gib Barcodes in Ticket-PDFs aus.</Description>
-    <Description Lang="hu">Vonalkódok nyomtatása a jegy PDF-ekre.</Description>
-    <ChangeLog Version="5.0.2" Date="2016-04-16 18:55:09">Added Hungarian translation, thanks to Balázs Úr.</ChangeLog>
+    <Version>6.0.1</Version>
+    <Framework>6.0.x</Framework>
+    <ModuleRequired Version="2.15">GD</ModuleRequired>
     <ModuleRequired Version="1.15">GD::Barcode</ModuleRequired>
+    <Vendor>Perl-Services.de</Vendor>
+    <URL>http://www.perl-services.de</URL>
+    <Description Lang="de">Gib Barcodes in Ticket-PDFs aus.</Description>
+    <Description Lang="en">Print barcodes in ticket pdfs.</Description>
+    <Description Lang="hu">Vonalkódok nyomtatása a jegy PDF-ekre.</Description>
+    <License>GNU AFFERO GENERAL PUBLIC LICENSE Version 3, November 2007</License>
     <Filelist>
-        <File Permission="644" Location="Kernel/Config/Files/TicketBarcode.xml"/>
-        <File Permission="644" Location="Kernel/Language/de_TicketBarcode.pm"/>
-        <File Permission="644" Location="Kernel/Language/hu_TicketBarcode.pm"/>
-        <File Permission="644" Location="Custom/Kernel/Modules/AgentTicketPrint.pm"/>
-        <File Permission="644" Location="Custom/Kernel/System/Ticket/Barcode.pm"/>
-        <File Permission="644" Location="doc/en/TicketBarcode.pod"/>
-        <File Permission="644" Location="doc/hu/TicketBarcode.pod"/>
+        <File Permission="644" Location="Custom/Kernel/Output/PDF/Ticket.pm" />
+        <File Permission="644" Location="Custom/Kernel/System/Ticket/Barcode.pm" />
+        <File Permission="644" Location="Kernel/Config/Files/XML/TicketBarcode.xml" />
+        <File Permission="644" Location="Kernel/Language/de_TicketBarcode.pm" />
+        <File Permission="644" Location="Kernel/Language/hu_TicketBarcode.pm" />
+        <File Permission="644" Location="doc/en/TicketBarcode.pod" />
+        <File Permission="644" Location="doc/hu/TicketBarcode.pod" />
     </Filelist>
-    <DatabaseInstall Type="pre">
+    <DatabaseInstall Type="post">
         <TableCreate Name="ps_ticket_barcode">
-            <Column Name="ticket_id" Type="BIGINT" Required="True" />
-            <Column Name="b_value" Type="VARCHAR" Size="250"  Required="True" />
-            <Column Name="b_type" Type="VARCHAR" Size="250" Required="True" />
-            <Column Name="b_height" Type="INTEGER" Required="True" />
-            <Column Name="b_width" Type="INTEGER" Required="True" />
-            <Column Name="barcode" Type="VARCHAR" Size="250" Required="True" />
+            <Column Name="ticket_id" Required="true" Type="BIGINT" />
+            <Column Name="b_value" Required="true" Type="VARCHAR" Size="250" />
+            <Column Name="b_type" Required="true" Type="VARCHAR" Size="250" />
+            <Column Name="b_height" Required="true" Type="INTEGER" />
+            <Column Name="b_width" Required="true" Type="INTEGER" />
+            <Column Name="barcode" Required="true" Type="VARCHAR" Size="250" />
         </TableCreate>
     </DatabaseInstall>
-    <DatabaseUninstall Type="post">
+    <DatabaseUninstall Type="pre">
         <TableDrop Name="ps_ticket_barcode" />
     </DatabaseUninstall>
 </otrs_package>

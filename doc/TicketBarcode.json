@@ -1,0 +1,41 @@
+{
+    "name": "TicketBarcode",
+    "version": "6.0.1",
+    "framework": [
+        "6.0.x"
+    ],
+    "vendor": {
+        "name":  "Perl-Services.de",
+        "url": "http://www.perl-services.de"
+    },
+    "license": "GNU AFFERO GENERAL PUBLIC LICENSE Version 3, November 2007",
+    "description" : {
+        "en": "Print barcodes in ticket pdfs.",
+        "de": "Gib Barcodes in Ticket-PDFs aus.",
+        "hu": "Vonalkódok nyomtatása a jegy PDF-ekre."
+    },
+    "requires": {
+        "module":  {
+            "GD": "2.15",
+            "GD::Barcode": "1.15"
+        }
+    },
+    "database" : [
+        {
+            "type": "TableCreate",
+            "version": 0,
+            "name": "ps_ticket_barcode",
+            "columns": [
+                { "name": "ticket_id", "required": "true", "type": "BIGINT" },
+                { "name": "b_value", "required": "true", "type": "VARCHAR", "size": 250 },
+                { "name": "b_type", "required": "true", "type": "VARCHAR", "size": 250 },
+                { "name": "b_height", "required": "true", "type": "INTEGER" },
+                { "name": "b_width", "required": "true", "type": "INTEGER" },
+                { "name": "barcode", "required": "true", "type": "VARCHAR", "size": 250 }
+            ]
+        }
+    ],
+    "exclude_files" : [
+        "doc/TicketBarcode.json"
+    ]
+}
