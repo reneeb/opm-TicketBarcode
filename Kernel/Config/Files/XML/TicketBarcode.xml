@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<otrs_config version="2.0" init="Config">
+<otobo_config version="2.0" init="Config">
     <Setting Name="TicketBarcode::BarcodeType" Required="1" Valid="1">
         <Description Translatable="1">Type of barcode generated for the tickets.</Description>
         <Navigation>Barcode</Navigation>
@@ -75,4 +75,4 @@
             <Array></Array>
         </Value>
     </Setting>
-</otrs_config>
+</otobo_config>

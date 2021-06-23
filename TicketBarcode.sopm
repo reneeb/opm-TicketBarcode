@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<otrs_package version="1.0">
-    <!-- GENERATED WITH OTRS::OPM::Maker::Command::sopm (1.4) -->
+<otobo_package version="1.0">
+    <!-- GENERATED WITH OTRS::OPM::Maker::Command::sopm (1.44) -->
     <Name>TicketBarcode</Name>
-    <Version>6.0.1</Version>
-    <Framework>6.0.x</Framework>
+    <Version>10.0.1</Version>
+    <Framework>10.0.x</Framework>
     <ModuleRequired Version="2.15">GD</ModuleRequired>
     <ModuleRequired Version="1.15">GD::Barcode</ModuleRequired>
     <Vendor>Perl-Services.de</Vendor>
@@ -34,4 +34,4 @@
     <DatabaseUninstall Type="pre">
         <TableDrop Name="ps_ticket_barcode" />
     </DatabaseUninstall>
-</otrs_package>
+</otobo_package>
