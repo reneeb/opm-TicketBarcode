@@ -1,6 +1,6 @@
 # --
 # Kernel/Language/de_TicketBarcode.pm - the German translation of TicketBarcode
-# Copyright (C) 2016 Perl-Services, http://www.perl-services.de
+# Copyright (C) 2016 - 2022 Perl-Services, https://www.perl-services.de
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file COPYING for license information (AGPL). If you

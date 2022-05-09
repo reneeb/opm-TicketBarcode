@@ -1,6 +1,6 @@
 # --
 # Kernel/Language/hu_TicketBarcode - the Hungarian translation of TicketBarcode
-# Copyright (C) 2016 Perl-Services, http://www.perl-services.de
+# Copyright (C) 2016 - 2022 Perl-Services, https://www.perl-services.de
 # Copyright (C) 2016 Balázs Úr, http://www.otrs-megoldasok.hu
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
